@@ -27,6 +27,7 @@ import {
 } from "../shared/ui"
 import { Comment } from "../entities/comments/models"
 import { Post } from "../entities/posts/models"
+import { User } from "../entities/users/models"
 
 const PostsManager = () => {
   const navigate = useNavigate()
@@ -84,9 +85,9 @@ const PostsManager = () => {
       .then((response) => response.json())
       .then((users) => {
         usersData = users.users
-        const postsWithUsers = postsData.posts.map((post) => ({
+        const postsWithUsers = postsData.posts.map((post: Post) => ({
           ...post,
-          author: usersData.find((user) => user.id === post.userId),
+          author: usersData.find((user: User) => user.id === post.userId),
         }))
         setPosts(postsWithUsers)
         setTotal(postsData.total)
@@ -143,7 +144,7 @@ const PostsManager = () => {
       const postsData = await postsResponse.json()
       const usersData = await usersResponse.json()
 
-      const postsWithUsers = postsData.posts.map((post) => ({
+      const postsWithUsers = postsData.posts.map((post: Post) => ({
         ...post,
         author: usersData.users.find((user) => user.id === post.userId),
       }))
