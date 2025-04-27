@@ -25,6 +25,8 @@ import {
   TableRow,
   Textarea,
 } from "../shared/ui"
+import { Comment } from "../entities/comments/models"
+import { Post } from "../entities/posts/models"
 
 const PostsManager = () => {
   const navigate = useNavigate()
@@ -32,28 +34,28 @@ const PostsManager = () => {
   const queryParams = new URLSearchParams(location.search)
 
   // 상태 관리
-  const [posts, setPosts] = useState([])
-  const [total, setTotal] = useState(0)
-  const [skip, setSkip] = useState(parseInt(queryParams.get("skip") || "0"))
-  const [limit, setLimit] = useState(parseInt(queryParams.get("limit") || "10"))
-  const [searchQuery, setSearchQuery] = useState(queryParams.get("search") || "")
-  const [selectedPost, setSelectedPost] = useState(null)
-  const [sortBy, setSortBy] = useState(queryParams.get("sortBy") || "")
-  const [sortOrder, setSortOrder] = useState(queryParams.get("sortOrder") || "asc")
-  const [showAddDialog, setShowAddDialog] = useState(false)
-  const [showEditDialog, setShowEditDialog] = useState(false)
-  const [newPost, setNewPost] = useState({ title: "", body: "", userId: 1 })
-  const [loading, setLoading] = useState(false)
-  const [tags, setTags] = useState([])
-  const [selectedTag, setSelectedTag] = useState(queryParams.get("tag") || "")
-  const [comments, setComments] = useState({})
-  const [selectedComment, setSelectedComment] = useState(null)
-  const [newComment, setNewComment] = useState({ body: "", postId: null, userId: 1 })
-  const [showAddCommentDialog, setShowAddCommentDialog] = useState(false)
-  const [showEditCommentDialog, setShowEditCommentDialog] = useState(false)
-  const [showPostDetailDialog, setShowPostDetailDialog] = useState(false)
-  const [showUserModal, setShowUserModal] = useState(false)
-  const [selectedUser, setSelectedUser] = useState(null)
+  const [posts, setPosts] = useState<Post[]>([]) //type post[]
+  const [total, setTotal] = useState<number>(0) //count
+  const [skip, setSkip] = useState<number>(parseInt(queryParams.get("skip") || "0"))
+  const [limit, setLimit] = useState<number>(parseInt(queryParams.get("limit") || "10"))
+  const [searchQuery, setSearchQuery] = useState<string>(queryParams.get("search") || "")
+  const [selectedPost, setSelectedPost] = useState(null) //type post
+  const [sortBy, setSortBy] = useState<string>(queryParams.get("sortBy") || "")
+  const [sortOrder, setSortOrder] = useState<string>(queryParams.get("sortOrder") || "asc")
+  const [showAddDialog, setShowAddDialog] = useState<boolean>(false)
+  const [showEditDialog, setShowEditDialog] = useState<boolean>(false)
+  const [newPost, setNewPost] = useState<Post>({ title: "", body: "", userId: 1 }) //post
+  const [loading, setLoading] = useState<boolean>(false)
+  const [tags, setTags] = useState<string[]>([])
+  const [selectedTag, setSelectedTag] = useState<string>(queryParams.get("tag") || "") //type tag
+  const [comments, setComments] = useState<Comment>({ body: null, postId: null, userId: null }) //type comments
+  const [selectedComment, setSelectedComment] = useState<Comment | null>(null) //type comment
+  const [newComment, setNewComment] = useState<Comment>({ body: "", postId: null, userId: 1 }) //type comment
+  const [showAddCommentDialog, setShowAddCommentDialog] = useState<boolean>(false)
+  const [showEditCommentDialog, setShowEditCommentDialog] = useState<boolean>(false)
+  const [showPostDetailDialog, setShowPostDetailDialog] = useState<boolean>(false)
+  const [showUserModal, setShowUserModal] = useState<boolean>(false)
+  const [selectedUser, setSelectedUser] = useState(null) //type user
 
   // URL 업데이트 함수
   const updateURL = () => {
@@ -268,7 +270,6 @@ const PostsManager = () => {
   // 댓글 좋아요
   const likeComment = async (id, postId) => {
     try {
-
       const response = await fetch(`/api/comments/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -277,7 +278,9 @@ const PostsManager = () => {
       const data = await response.json()
       setComments((prev) => ({
         ...prev,
-        [postId]: prev[postId].map((comment) => (comment.id === data.id ? {...data, likes: comment.likes + 1} : comment)),
+        [postId]: prev[postId].map((comment) =>
+          comment.id === data.id ? { ...data, likes: comment.likes + 1 } : comment,
+        ),
       }))
     } catch (error) {
       console.error("댓글 좋아요 오류:", error)
