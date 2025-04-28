@@ -26,8 +26,8 @@ export const DialogContent = forwardRef<HTMLDivElement, DialogPrimitive.DialogCo
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
-export const DialogHeader = ({ className, ...props }: {className?:string}) => (
-  <div className={`flex flex-col space-y-1.5 text-center sm:text-left ${className}`} {...props} />
+export const DialogHeader = ({...props }) => (
+  <div className={`flex flex-col space-y-1.5 text-center sm:text-left ${props.className}`} {...props} />
 )
 DialogHeader.displayName = "DialogHeader"
 
