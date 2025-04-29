@@ -1,1 +1,1 @@
-export * from "./fetchPosts.ts";
+export * from "./posts.ts";
