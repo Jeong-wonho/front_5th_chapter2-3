@@ -1,4 +1,4 @@
-import { Comment } from "../models"
+import { Comment, getIncreasedLikes } from "../models"
 
 export const getComments = async (postId: number) => {
   const response = await fetch(`/api/comments/post/${postId}`)
