@@ -2,7 +2,7 @@ import { User } from "../../../entities/users/models"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../shared/ui"
 
 interface UserDetailDialogProps {
-    selectedUser: User
+    selectedUser: User | null
     showUserModal: boolean
     setShowUserModal: (showUserModal: boolean) => void
 }

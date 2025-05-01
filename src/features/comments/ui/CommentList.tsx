@@ -1,30 +1,25 @@
-
-import { Comment } from "../../../entities/comments/models"
+import { useCommentStore } from "../../../entities/comments/models"
+import { usePostStore } from "../../../entities/posts/models"
 import { highlightText } from "../../../shared/lib"
 import { CommentAction } from "./CommentAction"
 
 interface CommentListProps {
-    postId: number
-    comments: { [postId: number]: Comment[] };
-    setSelectedComment: (comment: Comment) => void
-    setShowEditCommentDialog: (showEditCommentDialog: boolean) => void
-    deleteComment: (commentId: number, postId: number) => void
-    likeComment: (commentId: number, postId: number) => void
-    searchQuery: string
+  searchQuery: string
 }
 
-export const CommentList = ({
-    postId,
-    comments,
-    setSelectedComment,
-    setShowEditCommentDialog,
-    deleteComment,
-    likeComment,
-    searchQuery,
-}: CommentListProps) => {
+export const CommentList = ({ searchQuery }: CommentListProps) => {
+  const { selectedPost } = usePostStore()
+  const { comments } = useCommentStore()
+
+  if (!selectedPost) {
+    return null
+  }
+
+  const postComments = comments[selectedPost.id] || []
+  console.log("postComments", postComments);
   return (
     <div className="space-y-1">
-      {comments[postId]?.map((comment) => (
+      {postComments.length > 0 && postComments.map((comment) => (
         <div key={comment.id} className="flex items-center justify-between text-sm border-b pb-1">
           <div className="flex items-center space-x-2 overflow-hidden">
             <span className="font-medium truncate">{comment.user.username}:</span>
@@ -32,11 +27,7 @@ export const CommentList = ({
           </div>
           <CommentAction
             comment={comment}
-            postId={postId}
-            setSelectedComment={setSelectedComment}
-            setShowEditCommentDialog={setShowEditCommentDialog}
-            deleteComment={deleteComment}
-            likeComment={likeComment}
+            postId={selectedPost.id}
           />
         </div>
       ))}

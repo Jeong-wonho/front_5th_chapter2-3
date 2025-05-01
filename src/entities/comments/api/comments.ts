@@ -1,4 +1,4 @@
-import { Comment, getIncreasedLikes } from "../models"
+import { Comment, findCommentById, getIncreasedLikes } from "../models"
 
 export const getComments = async (postId: number) => {
   const response = await fetch(`/api/comments/post/${postId}`)
@@ -32,11 +32,16 @@ export const deleteCommentData = async (commentId: number) => {
   })
 }
 
-export const patchCommentData = async (comments: Comment[], id:number, postId:number ) => {
+export const patchCommentData = async (comments: { [postId: number]: Comment[] }, id:number, postId:number ) => {
+    const comment = findCommentById(comments, postId, id)
+    if (!comment) {
+      console.error("댓글을 찾을 수 없습니다.");
+      return;
+    }
     const response = await fetch(`/api/comments/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ likes: comments[postId].find((c) => c.id === id).likes + 1 }),
+        body: JSON.stringify({ likes: getIncreasedLikes(comment) }),
       })
       const data = await response.json()
   return data
