@@ -7,16 +7,12 @@ const env = loadEnv(mode, process.cwd(), "")
 
 export default defineConfig({
   base: env.VITE_BASE_PATH,
-  plugins: [react()],
-  build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, "index.html"),
-      },
-    },
-  },
-  test: {
-    globals: true,
-    environment: "jsdom",
-  },
+		plugins: [react()],
+		build: {
+			rollupOptions: {
+				input: {
+					main: resolve(__dirname, "index.html"),
+				},
+			},
+		},
 })
