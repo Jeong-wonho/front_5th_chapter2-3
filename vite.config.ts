@@ -9,10 +9,20 @@ function apiReplace(): Plugin {
     apply: "build",
     transform(code, id) {
       if (!id.match(/\.(ts|js|tsx|jsx)$/)) return
-      return code.replace(
+      
+      // 슬래시로 시작하는 패턴 변환
+      let transformedCode = code.replace(
         /(['"`])\/api([^"'`\\]*)\1/g,
         (_, quote, apiPath) => `${quote}https://dummyjson.com${apiPath}${quote}`,
-      )
+      );
+      
+      // 슬래시 없이 시작하는 패턴 변환
+      transformedCode = transformedCode.replace(
+        /(['"`])api\/([^"'`\\]*)\1/g,
+        (_, quote, apiPath) => `${quote}https://dummyjson.com/${apiPath}${quote}`,
+      );
+      
+      return transformedCode;
     },
   }
 }

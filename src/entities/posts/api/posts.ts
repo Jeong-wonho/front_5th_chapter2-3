@@ -1,13 +1,13 @@
 import { Post, PostResponse } from "../models"
 
 export const getPosts = async (limit: number, skip: number): Promise<PostResponse> => {
-  const response = await fetch(`api/posts?limit=${limit}&skip=${skip}`)
+  const response = await fetch(`/api/posts?limit=${limit}&skip=${skip}`)
   const data = await response.json()
   return data
 }
 
 export const addPostData = async (newPost: Post) => {
-  const response = await fetch("api/posts/add", {
+  const response = await fetch("/api/posts/add", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newPost),
@@ -17,7 +17,7 @@ export const addPostData = async (newPost: Post) => {
 }
 
 export const updatePostData = async (selectedPost: Post) => {
-  const response = await fetch(`api/posts/${selectedPost.id}`, {
+  const response = await fetch(`/api/posts/${selectedPost.id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(selectedPost),
@@ -27,7 +27,7 @@ export const updatePostData = async (selectedPost: Post) => {
 }
 
 export const deletePostData = async (postId: number) => {
-  const response = await fetch(`api/posts/${postId}`, {
+  const response = await fetch(`/api/posts/${postId}`, {
     method: "DELETE",
   })
 
