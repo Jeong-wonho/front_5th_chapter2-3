@@ -1,17 +1,22 @@
-import { defineConfig } from "vite"
+import { defineConfig } from "vitest/config"
 import react from "@vitejs/plugin-react"
+import { loadEnv } from "vite"
+import { resolve } from "path"
+const mode = process.env.NODE_ENV || "development"
+const env = loadEnv(mode, process.cwd(), "")
 
-// https://vite.dev/config/
 export default defineConfig({
+  base: env.VITE_BASE_PATH,
   plugins: [react()],
-  server: {
-    proxy: {
-      "/api": {
-        // target: 'https://jsonplaceholder.typicode.com',
-        target: "https://dummyjson.com",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
       },
     },
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
   },
 })
