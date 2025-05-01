@@ -1,8 +1,10 @@
+import { User } from "../../users/models"
+
 export interface Comment {
   id: number
-  body: string | null
+  body: string
   postId: number | null
-  userId: number | null
+  user: User
   likes: number
 }
 
