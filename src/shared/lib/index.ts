@@ -1,1 +1,2 @@
-export * from "./highlightText"
+export * from './highlightText';
+export * from './api-client';
