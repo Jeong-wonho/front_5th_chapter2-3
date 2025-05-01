@@ -11,7 +11,7 @@ export const postKeys = {
 
 // Queries
 export const usePostsQuery = (limit: number, skip: number) => {
-  return useQuery<PostResponse, Error>({
+  return useQuery({
     queryKey: postKeys.list(limit, skip),
     queryFn: () => getPosts(limit, skip),
   })

@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react"
 import { Post } from "../../../entities/posts/models"
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Textarea } from "../../../shared/ui"
 
