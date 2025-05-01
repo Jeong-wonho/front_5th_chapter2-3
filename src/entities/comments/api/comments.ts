@@ -2,13 +2,13 @@ import { Comment, findCommentById, getIncreasedLikes } from "../models"
 import { apiFetch } from "../../../shared/lib/api-client"
 
 export const getComments = async (postId: number) => {
-  const response = await apiFetch(`api/comments/post/${postId}`)
+  const response = await fetch(`api/comments/post/${postId}`)
   const data = await response.json()
   return data
 }
 
 export const addCommentData = async (newComment: Comment) => {
-  const response = await apiFetch("api/comments/add", {
+  const response = await fetch("api/comments/add", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newComment),
@@ -18,7 +18,7 @@ export const addCommentData = async (newComment: Comment) => {
 }
 
 export const updateCommentData = async (selectedComment: Comment) => {
-  const response = await apiFetch(`api/comments/${selectedComment.id}`, {
+  const response = await fetch(`api/comments/${selectedComment.id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ body: selectedComment.body }),
@@ -28,7 +28,7 @@ export const updateCommentData = async (selectedComment: Comment) => {
 }
 
 export const deleteCommentData = async (commentId: number) => {
-  const response = await apiFetch(`api/comments/${commentId}`, {
+  const response = await fetch(`api/comments/${commentId}`, {
     method: "DELETE",
   })
   if (!response.ok) {
