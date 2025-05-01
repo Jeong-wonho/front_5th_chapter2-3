@@ -6,5 +6,4 @@ export function mapPostsWithUsers(posts: Post[], users:User[]){
         ...post,
         author: users.find((user) => user.id === post.userId)
     }))
-
 }

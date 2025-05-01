@@ -1,6 +1,7 @@
 import { UserResponse } from "../models";
 
-export async function getUsers(): Promise<UserResponse> {
+export const getUsers = async (): Promise<UserResponse> => {
     const response = await fetch("/api/users?limit=0&select=username,image");
-    return response.json();
+    const data = await response.json();
+    return data;
 }

@@ -1,9 +1,8 @@
 
-import { useState } from "react"
-
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Textarea } from "../../../shared/ui"
 import { Post, usePostStore } from "../../../entities/posts/models"
 import { addPostData } from "../../../entities/posts/api"
+import { useState } from "react"
 
 interface CreatePostDialogProps {
     showAddDialog: boolean

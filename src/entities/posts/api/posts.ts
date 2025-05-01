@@ -2,7 +2,8 @@ import { Post, PostResponse } from "../models"
 
 export const getPosts = async (limit: number, skip: number): Promise<PostResponse> => {
   const response = await fetch(`/api/posts?limit=${limit}&skip=${skip}`)
-  return response.json()
+  const data = await response.json()
+  return data
 }
 
 export const addPostData = async (newPost: Post) => {

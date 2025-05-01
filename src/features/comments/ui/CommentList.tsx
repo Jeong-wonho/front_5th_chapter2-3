@@ -9,14 +9,15 @@ interface CommentListProps {
 
 export const CommentList = ({ searchQuery }: CommentListProps) => {
   const { selectedPost } = usePostStore()
-  const { comments } = useCommentStore()
+  const {comments} = useCommentStore()
 
+  
   if (!selectedPost) {
     return null
   }
 
   const postComments = comments[selectedPost.id] || []
-  console.log("postComments", postComments);
+  
   return (
     <div className="space-y-1">
       {postComments.length > 0 && postComments.map((comment) => (

@@ -8,6 +8,8 @@ interface SearchInputProps {
 }
 
 export const SearchInput = ({searchQuery, setSearchQuery, searchPosts}: SearchInputProps) => {
+  
+
   return (
     <div className="flex-1">
       <div className="relative">

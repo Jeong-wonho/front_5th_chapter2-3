@@ -27,22 +27,31 @@ export const updateCommentData = async (selectedComment: Comment) => {
 }
 
 export const deleteCommentData = async (commentId: number) => {
-  await fetch(`/api/comments/${commentId}`, {
+  const response = await fetch(`/api/comments/${commentId}`, {
     method: "DELETE",
   })
+  if (!response.ok) {
+    throw new Error('Failed to delete comment')
+  }
+  return commentId
 }
 
-export const patchCommentData = async (comments: { [postId: number]: Comment[] }, id:number, postId:number ) => {
-    const comment = findCommentById(comments, postId, id)
-    if (!comment) {
-      console.error("댓글을 찾을 수 없습니다.");
-      return;
-    }
-    const response = await fetch(`/api/comments/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ likes: getIncreasedLikes(comment) }),
-      })
-      const data = await response.json()
+export const patchCommentData = async (comments: { [postId: number]: Comment[] }, id: number, postId: number) => {
+  const comment = findCommentById(comments, postId, id)
+  if (!comment) {
+    throw new Error("댓글을 찾을 수 없습니다.")
+  }
+  
+  const response = await fetch(`/api/comments/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ likes: getIncreasedLikes(comment) }),
+  })
+  
+  if (!response.ok) {
+    throw new Error('Failed to update comment likes')
+  }
+  
+  const data = await response.json()
   return data
 }
