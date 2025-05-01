@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { PostResponse } from '../models'
 import { addPostData, deletePostData, getPosts, updatePostData } from './posts'
 
 // Query Keys
