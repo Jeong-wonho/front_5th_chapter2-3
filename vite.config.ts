@@ -1,31 +1,8 @@
-import react from "@vitejs/plugin-react"
-import { resolve } from "path"
 import { defineConfig, Plugin } from "vite"
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), apiReplace()],
-  base: "/front_5th_chapter2-3/",
-  build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, "index.html"),
-      },
-    },
-    outDir: "dist",
-  },
+import react from "@vitejs/plugin-react"
+import * as path from "node:path"
 
-  server: {
-    proxy: {
-      "/api": {
-        // target: 'https://jsonplaceholder.typicode.com',
-        target: "https://dummyjson.com",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
-    },
-  },
-})
-
+// API 경로를 빌드 시에만 치환하는 플러그인
 function apiReplace(): Plugin {
   return {
     name: "api-replace",
@@ -39,3 +16,35 @@ function apiReplace(): Plugin {
     },
   }
 }
+
+export default defineConfig({
+  plugins: [react(), apiReplace()],
+  base: process.env.NODE_ENV === "production" ? "/front_5th_chapter2-3/" : "/",
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+      },
+    },
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "@/app": path.resolve(__dirname, "src/app"),
+      "@/widgets": path.resolve(__dirname, "src/widgets"),
+      "@/pages": path.resolve(__dirname, "src/pages"),
+      "@/entities": path.resolve(__dirname, "src/entities"),
+      "@/features": path.resolve(__dirname, "src/features"),
+      "@/shared": path.resolve(__dirname, "src/shared"),
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://dummyjson.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
+})
