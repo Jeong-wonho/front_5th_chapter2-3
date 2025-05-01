@@ -1,5 +1,6 @@
 import { Post } from "../../../entities/posts/models"
 import { User } from "../../../entities/users/models"
+import { highlightText } from "../../../shared/lib"
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../shared/ui"
 import { Edit2, MessageSquare, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react"
 
@@ -29,19 +30,7 @@ const PostTable = (
         deletePost,
     }: PostTableProps
 ) => {
-  const highlightText = (text: string, highlight: string) => {
-    if (!text) return null
-    if (!highlight.trim()) {
-      return <span>{text}</span>
-    }
-    const regex = new RegExp(`(${highlight})`, "gi")
-    const parts = text.split(regex)
-    return (
-      <span>
-        {parts.map((part, i) => (regex.test(part) ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>))}
-      </span>
-    )
-  }
+  
 
   return (
     <Table>
