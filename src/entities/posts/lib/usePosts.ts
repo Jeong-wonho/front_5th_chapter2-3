@@ -4,7 +4,7 @@ import { usePostStore } from "../models";
 
 export const usePosts = (limit:number, skip:number) => {
     const {setPosts, setTotal} = usePostStore();
-    const postsData = usePostsQuery(limit, skip);
+    const postsData = usePostsQuery({limit, skip});
 
     useEffect(() => {
         if (postsData.data) {
