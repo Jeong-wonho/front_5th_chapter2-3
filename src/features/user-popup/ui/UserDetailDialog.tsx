@@ -8,6 +8,7 @@ interface UserDetailDialogProps {
 }
 
 export const UserDetailDialog = ({selectedUser, showUserModal, setShowUserModal}: UserDetailDialogProps) => {
+  
     return (
         <Dialog open={showUserModal} onOpenChange={setShowUserModal}>
         <DialogContent>

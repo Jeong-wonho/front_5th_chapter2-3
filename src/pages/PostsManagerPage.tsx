@@ -5,9 +5,8 @@ import {
   CardContent,
 } from "../shared/ui"
 
-import { usePostFiltersStore } from "../entities/posts/models"
-import { usePostsWithUsersQuery } from "../entities/posts/api/queries"
-import { useUsersQuery } from "../entities/users/api/queries"
+import { usePostFiltersStore, usePostStore } from "../entities/posts/models"
+import { usePostsQuery } from "../entities/posts/api/queries"
 
 import { PostTable } from "../features/post-table/ui"
 import { CardHeaderComp } from "../widgets/card-header/ui"
@@ -19,18 +18,27 @@ const PostsManager = () => {
 
   // PostFilters 스토어에서 필터 상태와 액션 가져오기
   const { 
-    skip, limit, 
-    searchQuery, selectedTag,
+    skip, limit, selectedTag, sortBy, sortOrder,
     setSkip, setLimit, 
-    setSelectedTag,
     syncWithUrlParams
-  } = usePostFiltersStore()
+  } = usePostFiltersStore();
 
+  const { data: postsData, isLoading: isPostsLoading } = usePostsQuery({
+    skip: skip,
+    limit: limit,
+    tag: selectedTag,
+    sortBy: sortBy,
+    sortOrder: sortOrder
+  });
 
-  // TanStack Query로 게시물과 사용자 데이터 가져오기
-  const { data: usersData, isLoading: isUsersLoading, isError: isUsersError } = useUsersQuery();
+  const { posts, setPosts, total, setTotal } = usePostStore();
 
-  const {data: postsWithUsersData, isLoading: isPostsLoading } = usePostsWithUsersQuery(limit, skip);
+  useEffect(() => {
+    if (postsData) {
+      setPosts(postsData.posts);
+      setTotal(postsData.total);
+    }
+  }, [postsData, setPosts, setTotal])
 
   // URL 변경 시 필터 상태 업데이트
   useEffect(() => {
@@ -42,28 +50,23 @@ const PostsManager = () => {
     <Card className="w-full max-w-6xl mx-auto">
       <CardHeaderComp/>
       <CardContent>
-      
+        {/* 위젯으로 분리! */}
         <div className="flex flex-col gap-4">
           <PostFiltersPanel
           />
-
-          {isPostsLoading || isUsersLoading ? (
+          {isPostsLoading  ? (
             <div className="flex justify-center p-4">로딩 중...</div>
           ) : (
             <PostTable
-              posts={postsWithUsersData?.posts || []}
-              searchQuery={searchQuery}
-              selectedTag={selectedTag}
-              setSelectedTag={setSelectedTag}
+              posts={posts || []}
             />
           )}
-
           <PostPagination 
             limit={limit} 
             setLimit={setLimit} 
             skip={skip} 
             setSkip={setSkip} 
-            total={postsWithUsersData?.total || 0} 
+            total={total || 0} 
           />
         </div>
       </CardContent>

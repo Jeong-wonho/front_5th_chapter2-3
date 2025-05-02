@@ -1,8 +1,7 @@
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Textarea } from "../../../shared/ui"
-import { Post, usePostFiltersStore } from "../../../entities/posts/models"
+import { Post, usePostStore } from "../../../entities/posts/models"
 import { useState } from "react"
-import { postKeys, useAddPostMutation } from "../../../entities/posts/api/queries"
-import { useQueryClient } from "@tanstack/react-query"
+import { useAddPostMutation } from "../../../entities/posts/api/queries"
 
 interface CreatePostDialogProps {
   showAddDialog: boolean
@@ -10,6 +9,7 @@ interface CreatePostDialogProps {
 }
 
 export const CreatePostDialog = ({ showAddDialog, setShowAddDialog }: CreatePostDialogProps) => {
+  const { addPost } = usePostStore();
   const [newPost, setNewPost] = useState<Post>({
     id: 1,
     title: "",
@@ -21,11 +21,11 @@ export const CreatePostDialog = ({ showAddDialog, setShowAddDialog }: CreatePost
 
   const handleSubmit = async () => {
     try {
-      const data = await addPostMutation.mutateAsync(newPost)
-      console.log(data)
+      const createdPost = await addPostMutation.mutateAsync(newPost);
+      
+      addPost(createdPost);
       setShowAddDialog(false)
       setNewPost((prev) => ({ ...prev, id: prev.id + 1, title: "", body: "", userId: 1 }))
-
     } catch (error) {
       console.error("게시물 추가 오류:", error)
     }

@@ -4,60 +4,62 @@ import { highlightText } from "../../../shared/lib"
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../shared/ui"
 import { Edit2, MessageSquare, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react"
 import { usePostStore } from "../../../entities/posts/models"
-import { deletePostData, updatePostData } from "../../../entities/posts/api"
-import { getComments } from "../../../entities/comments/api"
 import { useCommentStore } from "../../../entities/comments/models"
 import { EditPostDialog, PostDetailDialog } from "../../post-popup/ui"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { UserDetailDialog } from "../../user-popup/ui"
 import { useNavigate } from "react-router-dom"
+import { useDeletePostMutation, useUpdatePostMutation } from "../../../entities/posts/api/queries"
+import { useCommentsQuery } from "../../../entities/comments/api/queries"
+import { useUserQuery } from "../../../entities/users/api/queries"
 
 interface PostTableProps {
     posts: Post[],
-    searchQuery: string,
-    selectedTag: string,
-    setSelectedTag: (tag: string) => void,
 }
 
 const PostTable = ({
-    posts,
-    searchQuery,
-    selectedTag,
-    setSelectedTag,
+    posts
 }: PostTableProps) => {
   const navigate = useNavigate();
   const [showPostDetailDialog, setShowPostDetailDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [user, setUser] = useState<User | null>(null)
   const [showUserModal, setShowUserModal] = useState(false)
+  const { searchQuery, selectedTag, setSelectedTag, updateURL } = usePostFiltersStore()
   const { setPosts, selectedPost, setSelectedPost, deletePost } = usePostStore()
-  const { comments, setComments } = useCommentStore()
-  const { updateURL } = usePostFiltersStore()
+  const { setComments } = useCommentStore()
   
+  const { data: commentsData } = useCommentsQuery(selectedPost?.id || 0);
+  const { data: userData } = useUserQuery(user?.id || 0);
+  
+  const deletePostMutation = useDeletePostMutation();
+  const updatePostMutation = useUpdatePostMutation();
+  useEffect(() => {
+    if (commentsData && selectedPost?.id) {
+      setComments(selectedPost?.id, commentsData.comments);
+    }
+  },[commentsData, selectedPost?.id, setComments]);
+
+  useEffect(() => {
+    if (userData) {
+      setUser(userData);
+    }
+  }, [userData]);
 
   const handleDeletePost = async (postId: number) => {
     try {
-      await deletePostData(postId)
+      await deletePostMutation.mutateAsync(postId);
       deletePost(postId)
     } catch (error) {
       console.error("게시물 삭제 오류:", error)
     }
   }
 
-  const fetchComments = async (postId: number) => {
-    if (comments[postId]) return // 이미 불러온 댓글이 있으면 다시 불러오지 않음
-    try {
-      const data = await getComments(postId);
-      setComments(postId, data.comments);
-    } catch (error) {
-      console.error("댓글 가져오기 오류:", error)
-    }
-  }
-
   const updatePost = async () => {
     try {
       if (!selectedPost) return
-      const data = await updatePostData(selectedPost)
+      const data = await updatePostMutation.mutateAsync(selectedPost)
+      
       setPosts(posts.map((post) => (post.id === data.id ? data : post)))
       setShowEditDialog(false)
     } catch (error) {
@@ -67,20 +69,19 @@ const PostTable = ({
 
   // 게시물 상세 보기
   const openPostDetail = (post: Post) => {
-    fetchComments(post.id)
+    setSelectedPost(post);
     setShowPostDetailDialog(true)
   }
 
   const openUserModal = async (user: User) => {
     try {
-      const response = await fetch(`/api/users/${user.id}`)
-      const userData = await response.json()
-      setUser(userData)
+      setUser(user)
       setShowUserModal(true)
     } catch (error) {
       console.error("사용자 정보 가져오기 오류:", error)
     }
   }
+
   return (
     <>
     <Table>
@@ -165,7 +166,6 @@ const PostTable = ({
     <PostDetailDialog
         showPostDetailDialog={showPostDetailDialog}
         setShowPostDetailDialog={setShowPostDetailDialog}
-        searchQuery={searchQuery}
       />
       {/* 게시물 수정 대화상자 */}
       <EditPostDialog

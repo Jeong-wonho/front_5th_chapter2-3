@@ -1,9 +1,9 @@
 import { Edit2, ThumbsUp, Trash2 } from "lucide-react"
 import { Button } from "../../../shared/ui"
 import { Comment, useCommentStore } from "../../../entities/comments/models"
-import { deleteCommentData, patchCommentData } from "../../../entities/comments/api"
 import { useState } from "react"
 import { EditCommentDialog } from "../../comment-popup/ui"
+import { useDeleteCommentMutation, usePatchCommentMutation } from "../../../entities/comments/api/queries"
 
 interface CommentActionProps {
   comment: Comment
@@ -14,19 +14,31 @@ export const CommentAction = ({ comment, postId }: CommentActionProps) => {
   const [showEditCommentDialog, setShowEditCommentDialog] = useState(false)
   const { comments, selectedComment, setSelectedComment, likeComment, deleteComment } = useCommentStore()
 
+  const patchCommentMutation = usePatchCommentMutation()
+  const deleteCommentMutation = useDeleteCommentMutation();
+
+  
+
   const handleLikeComment = async (id: number, postId: number) => {
     try {
-      const data = await patchCommentData(comments, id, postId)
-      console.log("likeComment", data);
-      likeComment(postId, data.id);
+
+      // 로컬에서 먼저 좋아요 증가
+      likeComment(postId, id)
+      
+      // 서버에 요청 보내기
+      await patchCommentMutation.mutateAsync({ comments, id, postId })
+      
+      // 주의: 여기서 서버 응답의 data.id가 아닌 원래 id를 사용함
+      // likeComment(postId, data.id) 이 부분이 문제였음
     } catch (error) {
       console.error("댓글 좋아요 오류:", error)
+      // 오류 발생 시 롤백 로직 추가 가능
     }
   }
 
   const handleDeleteComment = async (id: number, postId: number) => {
     try {
-      await deleteCommentData(id)
+      await deleteCommentMutation.mutateAsync(id)
       deleteComment(postId, id)
     } catch (error) {
       console.error("댓글 삭제 오류:", error)

@@ -1,16 +1,14 @@
 import { useCommentStore } from "../../../entities/comments/models"
-import { usePostStore } from "../../../entities/posts/models"
+import { usePostFiltersStore, usePostStore } from "../../../entities/posts/models"
 import { highlightText } from "../../../shared/lib"
 import { CommentAction } from "./CommentAction"
 
-interface CommentListProps {
-  searchQuery: string
-}
 
-export const CommentList = ({ searchQuery }: CommentListProps) => {
+
+export const CommentList = () => {
   const { selectedPost } = usePostStore()
   const {comments} = useCommentStore()
-
+  const { searchQuery } = usePostFiltersStore();
   
   if (!selectedPost) {
     return null

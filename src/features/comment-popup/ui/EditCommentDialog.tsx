@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { Comment, useCommentStore } from "../../../entities/comments/models"
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Textarea } from "../../../shared/ui"
-import { updateCommentData } from "../../../entities/comments/api";
+import { usePatchCommentMutation } from "../../../entities/comments/api/queries";
 
 interface EditCommentDialogProps {
     postId: number
@@ -12,10 +12,12 @@ interface EditCommentDialogProps {
 
 export const EditCommentDialog = ({postId,selectedComment,setShowEditCommentDialog, showEditCommentDialog}: EditCommentDialogProps) => {
     const { updateComment, setSelectedComment} = useCommentStore()
+    const {data: updateCommentMutation} = usePatchCommentMutation()
     const handleUpdateComment = async () => {
         try {
           if (!selectedComment) return
-          const data = await updateCommentData(selectedComment)
+          const data = await updateCommentMutation.mutateAsync(selectedComment);
+          
           updateComment(postId, data);
           setShowEditCommentDialog(false)
         } catch (error) {

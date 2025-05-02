@@ -2,18 +2,20 @@ import { Plus } from "lucide-react"
 import { Button } from "../../../shared/ui"
 import { useCommentStore } from "../../../entities/comments/models/store"
 import { usePostStore } from "../../../entities/posts/models"
-import { addCommentData } from "../../../entities/comments/api"
 import { CreateCommentDialog } from "../../comment-popup/ui/CreateCommentDialog"
 import { useState } from "react"
+import { useAddCommentMutation } from "../../../entities/comments/api/queries"
 
 export const AddCommentButton = () => {
   const [showAddCommentDialog, setShowAddCommentDialog] = useState(false)
   const { newComment, setNewComment, addComment } = useCommentStore()
   const selectedPost = usePostStore(state => state.selectedPost)
+  const addCommentMutation = useAddCommentMutation()
 
   const handleAddComment = async () => {
     try {
-      const data = await addCommentData(newComment)
+      const data = await addCommentMutation.mutateAsync(newComment)
+      
       addComment(data.postId, data)
       setShowAddCommentDialog(false)
       setNewComment(null)
