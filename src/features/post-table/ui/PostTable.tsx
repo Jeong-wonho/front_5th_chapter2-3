@@ -1,4 +1,4 @@
-import { Post } from "../../../entities/posts/models"
+import { Post, usePostFiltersStore } from "../../../entities/posts/models"
 import { User } from "../../../entities/users/models"
 import { highlightText } from "../../../shared/lib"
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../shared/ui"
@@ -15,7 +15,6 @@ interface PostTableProps {
     posts: Post[],
     searchQuery: string,
     selectedTag: string,
-    updateURL: () => void,
     setSelectedTag: (tag: string) => void,
 }
 
@@ -23,7 +22,6 @@ const PostTable = ({
     posts,
     searchQuery,
     selectedTag,
-    updateURL,
     setSelectedTag,
 }: PostTableProps) => {
   const [showPostDetailDialog, setShowPostDetailDialog] = useState(false)
@@ -32,6 +30,8 @@ const PostTable = ({
   const [showUserModal, setShowUserModal] = useState(false)
   const { setPosts, selectedPost, setSelectedPost, deletePost } = usePostStore()
   const { comments, setComments } = useCommentStore()
+  const { updateURL } = usePostFiltersStore()
+
   const handleDeletePost = async (postId: number) => {
     try {
       await deletePostData(postId)

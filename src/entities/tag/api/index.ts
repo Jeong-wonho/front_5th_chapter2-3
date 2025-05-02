@@ -1,1 +1,2 @@
-export * from "./tag.ts";
+export * from "./tag";
+export * from "./queries";

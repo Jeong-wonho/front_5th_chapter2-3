@@ -1,10 +1,13 @@
+import { usePostFiltersStore } from "../../../entities/posts/models";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../shared/ui"
 
-interface SortControlsProps {
-    sortBy: string
-    setSortBy: (value: string) => void
-}
-export const SelectSortControl = ({sortBy, setSortBy}: SortControlsProps) => {
+
+export const SelectSortControl = () => {
+  const { 
+    sortBy,
+    setSortBy,
+  } = usePostFiltersStore();
+  
   return (
     <Select value={sortBy} onValueChange={setSortBy}>
       <SelectTrigger className="w-[180px]">

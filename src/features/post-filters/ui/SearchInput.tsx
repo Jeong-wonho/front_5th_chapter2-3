@@ -1,15 +1,13 @@
 import { Search } from "lucide-react"
 import { Input } from "../../../shared/ui"
+import { usePostFiltersStore } from "../../../entities/posts/models"
+import { useSearchPosts } from "../api/queries"
 
-interface SearchInputProps {
-  searchQuery: string
-  setSearchQuery: (value: string) => void
-  searchPosts: () => void
-}
+export const SearchInput = () => {
+  // 검색 훅 가져오기
+  const { executeSearch } = useSearchPosts()
 
-export const SearchInput = ({searchQuery, setSearchQuery, searchPosts}: SearchInputProps) => {
-  
-
+  const { searchQuery, setSearchQuery } = usePostFiltersStore()
   return (
     <div className="flex-1">
       <div className="relative">
@@ -19,7 +17,7 @@ export const SearchInput = ({searchQuery, setSearchQuery, searchPosts}: SearchIn
           className="pl-8"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && searchPosts()}
+          onKeyDown={(e) => e.key === "Enter" && executeSearch()}
         />
       </div>
     </div>

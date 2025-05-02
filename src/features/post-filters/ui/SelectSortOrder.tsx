@@ -1,10 +1,12 @@
+import { usePostFiltersStore } from "../../../entities/posts/models";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../shared/ui"
 
-interface SortOrderProps {
-    sortOrder: string
-    setSortOrder: (value: string) => void
-}
-export const SelectSortOrder = ({ sortOrder, setSortOrder }: SortOrderProps) => {
+export const SelectSortOrder = () => {
+  const { 
+    sortOrder,
+    setSortOrder,
+  } = usePostFiltersStore();
+  
   return (
     <Select value={sortOrder} onValueChange={setSortOrder}>
       <SelectTrigger className="w-[180px]">
