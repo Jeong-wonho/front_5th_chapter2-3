@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addPostData, deletePostData, getPosts, getPostsByTag, getPostsWithUsers, updatePostData } from './posts'
+import { addPostData, deletePostData, getPostsByTag, getPostsWithUsers, updatePostData } from './posts'
 
 // Query Keys
 export const postKeys = {
@@ -8,15 +8,6 @@ export const postKeys = {
   detail: (id: number) => [...postKeys.all, 'detail', id] as const,
   byTag: (tag: string) => [...postKeys.all, 'byTag', tag] as const,
   withUsers: (limit: number, skip: number) => [...postKeys.all, 'withUsers', { limit, skip }] as const,
-}
-
-// Queries
-export const usePostsQuery = (limit: number, skip: number) => {
-
-  return useQuery({
-    queryKey: postKeys.list(limit, skip),
-    queryFn: () => getPosts(limit, skip),
-  })
 }
 
 // 태그별 게시물 가져오기 쿼리
@@ -38,7 +29,7 @@ export const usePostsWithUsersQuery = (limit: number, skip: number) => {
 
 // Mutations
 export const useAddPostMutation = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   
   return useMutation({
     mutationFn: addPostData,
