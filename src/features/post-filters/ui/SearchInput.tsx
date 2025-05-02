@@ -1,13 +1,13 @@
 import { Search } from "lucide-react"
 import { Input } from "../../../shared/ui"
 import { usePostFiltersStore } from "../../../entities/posts/models"
-import { useSearchPosts } from "../api/queries"
+import { useSearchPosts } from "../lib/useSearchPosts"
 
 export const SearchInput = () => {
   // 검색 훅 가져오기
-  const { executeSearch } = useSearchPosts()
-
-  const { searchQuery, setSearchQuery } = usePostFiltersStore()
+  const { executeSearch } = useSearchPosts();
+  const { searchQuery, setSearchQuery } = usePostFiltersStore();
+  
   return (
     <div className="flex-1">
       <div className="relative">

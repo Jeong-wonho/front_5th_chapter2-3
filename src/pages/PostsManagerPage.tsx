@@ -1,11 +1,11 @@
 import { useEffect } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import {
   Card,
   CardContent,
 } from "../shared/ui"
 
-import { usePostStore, usePostFiltersStore } from "../entities/posts/models"
+import { usePostFiltersStore } from "../entities/posts/models"
 import { usePostsWithUsersQuery } from "../entities/posts/api/queries"
 import { useUsersQuery } from "../entities/users/api/queries"
 
@@ -15,16 +15,12 @@ import { PostFiltersPanel } from "../widgets/post-filters-panel/ui/PostFiltersPa
 import { PostPagination } from "../widgets/post-pagination/ui/PostPagination"
 
 const PostsManager = () => {
-  const navigate = useNavigate()
   const location = useLocation()
-
-  // Post 스토어에서 포스트 데이터 관련 상태와 액션 가져오기
-  const { setPosts, setTotal } = usePostStore()
 
   // PostFilters 스토어에서 필터 상태와 액션 가져오기
   const { 
     skip, limit, 
-    searchQuery, sortBy, sortOrder, selectedTag,
+    searchQuery, selectedTag,
     setSkip, setLimit, 
     setSelectedTag,
     syncWithUrlParams

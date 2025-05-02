@@ -10,6 +10,7 @@ import { useCommentStore } from "../../../entities/comments/models"
 import { EditPostDialog, PostDetailDialog } from "../../post-popup/ui"
 import { useState } from "react"
 import { UserDetailDialog } from "../../user-popup/ui"
+import { useNavigate } from "react-router-dom"
 
 interface PostTableProps {
     posts: Post[],
@@ -24,6 +25,7 @@ const PostTable = ({
     selectedTag,
     setSelectedTag,
 }: PostTableProps) => {
+  const navigate = useNavigate();
   const [showPostDetailDialog, setShowPostDetailDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [user, setUser] = useState<User | null>(null)
@@ -31,6 +33,7 @@ const PostTable = ({
   const { setPosts, selectedPost, setSelectedPost, deletePost } = usePostStore()
   const { comments, setComments } = useCommentStore()
   const { updateURL } = usePostFiltersStore()
+  
 
   const handleDeletePost = async (postId: number) => {
     try {
@@ -109,7 +112,7 @@ const PostTable = ({
                       }`}
                       onClick={() => {
                         setSelectedTag(tag)
-                        updateURL()
+                        updateURL(navigate)
                       }}
                     >
                       {tag}
