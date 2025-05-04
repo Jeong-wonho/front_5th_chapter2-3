@@ -13,20 +13,14 @@ import { useDeletePostMutation, useUpdatePostMutation } from "../../../entities/
 import { useCommentsQuery } from "../../../entities/comments/api/queries"
 import { useUserQuery } from "../../../entities/users/api/queries"
 
-interface PostTableProps {
-    posts: Post[],
-}
-
-const PostTable = ({
-    posts
-}: PostTableProps) => {
+const PostTable = () => {
   const navigate = useNavigate();
   const [showPostDetailDialog, setShowPostDetailDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [user, setUser] = useState<User | null>(null)
   const [showUserModal, setShowUserModal] = useState(false)
   const { searchQuery, selectedTag, setSelectedTag, updateURL } = usePostFiltersStore()
-  const { setPosts, selectedPost, setSelectedPost, deletePost } = usePostStore()
+  const { posts, setPosts, selectedPost, setSelectedPost, deletePost } = usePostStore()
   const { setComments } = useCommentStore()
   
   const { data: commentsData } = useCommentsQuery(selectedPost?.id || 0);
@@ -34,6 +28,7 @@ const PostTable = ({
   
   const deletePostMutation = useDeletePostMutation();
   const updatePostMutation = useUpdatePostMutation();
+
   useEffect(() => {
     if (commentsData && selectedPost?.id) {
       setComments(selectedPost?.id, commentsData.comments);
@@ -83,6 +78,7 @@ const PostTable = ({
   }
 
   return (
+    
     <>
     <Table>
       <TableHeader>

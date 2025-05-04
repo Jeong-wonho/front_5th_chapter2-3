@@ -7,7 +7,7 @@ export const SearchInput = () => {
   // 검색 훅 가져오기
   const { executeSearch } = useSearchPosts();
   const { searchQuery, setSearchQuery } = usePostFiltersStore();
-  
+
   return (
     <div className="flex-1">
       <div className="relative">

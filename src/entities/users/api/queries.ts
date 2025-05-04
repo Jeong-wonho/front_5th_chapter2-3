@@ -12,7 +12,7 @@ export const useUsersQuery = () => {
     queryKey: userKeys.list(),
     queryFn: getUsers,
   })
-} 
+}
 
 export const useUserQuery = (userId: number) => {
   return useQuery({

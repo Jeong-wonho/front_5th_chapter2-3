@@ -5,8 +5,6 @@ import { SelectTag } from "../../../features/post-filters/ui/SelectTag"
 
 
 export const PostFiltersPanel = () => {
-
-  
   return (
     <div className="flex gap-4">
       <SearchInput />

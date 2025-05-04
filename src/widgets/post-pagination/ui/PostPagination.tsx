@@ -1,15 +1,9 @@
-import { PageControl } from "../../../features/post-pagination/ui/PageControl"
-import { PageSelect } from "../../../features/post-pagination/ui/PageSelect"
+import { usePostFiltersStore, usePostStore } from "../../../entities/posts/models"
+import { PageControl, PageSelect } from "../../../features/post-pagination/ui"
 
-
-interface PostPaginationProps {
-  limit: number
-  setLimit: (limit: number) => void
-  skip: number
-  setSkip: (skip: number) => void
-  total: number
-}
-export const PostPagination = ({ limit, setLimit, skip, setSkip, total }: PostPaginationProps) => {
+export const PostPagination = () => {
+  const { total } = usePostStore();
+  const {limit, setLimit, skip, setSkip} = usePostFiltersStore();
   return (
     <div className="flex justify-between items-center">
       <PageSelect limit={limit} setLimit={setLimit} />
